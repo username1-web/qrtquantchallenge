@@ -1,0 +1,4 @@
+Gross Sharpe Ratio:  2.299
+Net Sharpe Ratio:  2.18
+Turnover %:  22.489
+ML Model + Rank + EWMA Sharpe: 2.18

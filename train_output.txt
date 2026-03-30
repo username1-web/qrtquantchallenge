@@ -1,0 +1,34 @@
+Loading data...
+Processing features...
+Stacking...
+Training on 3704593 samples...
+
+Optimal Coefficients:
+accumulation_distribution_index    : -0.000011
+aroon                              : -0.000305
+average_true_range                 : 0.000320
+chaikin_money_flow                 : -0.000183
+chande_momentum_oscillator         : -0.000457
+commodity_channel_index            : 0.001679
+ease_of_movement                   : 0.000267
+ichimoku                           : -0.001032
+know_sure_thing                    : 0.001687
+macd                               : 0.000231
+on_balance_volume                  : -0.000103
+relative_strength_index            : 0.001387
+stochastic_oscillator              : -0.000730
+trend_1_3                          : 0.000122
+trend_20_60                        : -0.001301
+trend_5_20                         : -0.000753
+trix                               : -0.002443
+ultimate_oscillator                : -0.000393
+volatility_20                      : 0.000040
+volatility_60                      : 0.000017
+volume                             : 0.000232
+williams_r                         : -0.000310
+
+Testing weights with EWMA smoothing benchmark...
+Gross Sharpe Ratio:  1.861
+Net Sharpe Ratio:  1.743
+Turnover %:  27.354
+Optimal Linear + EWMA Sharpe: 1.743

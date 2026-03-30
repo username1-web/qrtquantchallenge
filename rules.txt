@@ -1,0 +1,204 @@
+
+Overview
+In this contest you will engage in alpha research to develop systematic strategies for trading stocks on a daily basis using price and volume based features.
+
+By leveraging data analysis, statistical techniques, and machine learning tools, you will be required to identify patterns and build predictive models for profitable trading. The research will involve analyzing over 15 years of historical market data to discover robust factors that consistently generate returns across different market conditions.
+
+The dataset provided contains features derived from daily high, low, close, open and volume of stocks. The identity of stocks is anonymized, and is not relevant to our trading setup.
+
+Your team will have access to features spanning from 2005 to 2025 (both inclusive) to develop portfolio models. Additionally, you will have access to daily stock returns from 2005 to 2019 (both inclusive), which can be used to compute the Sharpe Ratio of your portfolio during this period.
+
+However, daily stock returns from 2020 to 2025 (both inclusive) will not be available, as this period serves as the Testing period. The final evaluation metric will be the Net Sharpe Ratio during this testing period, which measures risk-adjusted portfolio returns net of all trading costs.
+
+Don't worry if you didn't understand much, read through the Description section below to know more!
+
+Start
+
+4 days ago
+Close
+2 days to go
+Description
+Understanding the Data
+open: The first traded price of a stock at the start of the trading day
+close: The last traded price of a stock at the end of the trading day
+high: The highest traded price of a stock during the trading day
+low: The lowest traded price of a stock during the trading day
+volume: The total number of shares traded during the trading day
+Assume that all the prices are in the same currency.
+
+But you don't have access to this raw price information. We have derived certain other variables/features for you to use.
+
+You are provided with features.parquet file for these features in the Data tab. The data given to you ranges from 2005-01-03 to 2025-02-07. If you take a look, you can see data for 2167 stocks every day in each of these features.
+
+For each of these features you will have a matrix, where the rows are indexed by dates and the columns are indexed by stock identifiers. For example in the image below:
+
+Features Data
+
+the entry feature["06-01-2005", "2"] corresponds to the feature value of stock 2 on date 06-01-2005.
+
+Universe
+You are not going to trade all 2167 stocks everyday. You are going to trade only those stocks on a day for which universe.parquet has a 1.
+
+For example in the image below,
+
+Universe Depiction
+
+You can trade stock 2 on 05-01-2005 but you cannot trade stock 4 on 05-01-2005. universe.parquet is guaranteed to have only 0 [indicating the stock cannot be traded] and 1 [indicating the stock can be traded] values.
+
+Features
+Following are the features in features.parquet file derived from open, high, low, close, volume of stocks:
+
+relative_strength_index: It measures the speed and magnitude of recent price changes to assess whether a stock is overbought or oversold. An RSI value above 70 suggests overbought conditions, while a value below 30 indicates oversold conditions, signaling potential reversals.
+williams_r: It is a momentum indicator that measures the level of the closing price relative to the highest high over a given period, typically 14 days. It ranges from -100 to 0, where values below -80 indicate oversold conditions and values above -20 suggest overbought conditions.
+volatility_20: It measures the standard deviation of returns over a 20-day period, capturing the magnitude of price fluctuations. Higher values indicate increased market uncertainty and risk, while lower values suggest stability.
+volatility_60: It measures the standard deviation of returns over a 60-day period, reflecting longer-term price fluctuations. Higher values indicate greater market uncertainty and potential risk, while lower values suggest more stable price movements.
+trend_1_3: It calculates the difference between the short-term exponentially weighted moving average (EWMA) of returns with a span of 1 and the long-term EWMA with a span of 3. This difference is then divided by its exponentially weighted standard deviation with a span of 3, helping to identify the strength and direction of the trend.
+trend_5_20: It calculates the difference between the short-term exponentially weighted moving average (EWMA) of returns with a span of 5 and the long-term EWMA with a span of 20. This difference is then divided by its exponentially weighted standard deviation with a span of 20, helping to identify the strength and direction of the trend.
+trend_20_60: It calculates the difference between the short-term exponentially weighted moving average (EWMA) of returns with a span of 20 and the long-term EWMA with a span of 60. This difference is then divided by its exponentially weighted standard deviation with a span of 20, helping to identify the strength and direction of the trend.
+average_true_range: It measures market volatility by averaging the true range over a specified period, typically 14 days. The true range is the greatest of three values: the current high minus the current low, the absolute difference between the current high and the previous close, or the absolute difference between the current low and the previous close.
+macd: It is a trend-following momentum indicator that calculates the difference between the 12-day exponential moving average (EMA) and the 26-day EMA of the closing price. This difference is then smoothed using a 9-day EMA to generate trading signals, where positive values indicate bullish momentum and negative values suggest bearish momentum.
+trix: It is a momentum oscillator that calculates the 1-day percentage change of the triple-smoothed exponential moving average (EMA) of the closing price over a 15-day window. Positive TRIX values indicate increasing momentum, while negative values suggest weakening momentum or a potential downtrend.
+commodity_channel_index: It measures the deviation of the typical price (average of high, low, and close) from its 20-day simple moving average (SMA), scaled by its mean absolute deviation. Positive values indicate strong upward momentum, while negative values suggest downward momentum, with overbought and oversold levels typically set at +100 and -100.
+chande_momentum_oscillator: It measures the difference between the sum of gains and the sum of losses over a 14-day window, normalized to a scale of -100 to 100. Higher values indicate strong upward momentum, while lower values suggest strong downward momentum, with overbought and oversold levels typically set at +50 and -50.
+ichimoku: It is a comprehensive trend-following system that calculates the conversion line (9-period midpoint of high and low) and the base line (26-period midpoint of high and low) to determine short- and medium-term trends. The average of these two lines forms the Ichimoku cloud, which helps identify support, resistance, and trend direction.
+know_sure_thing: It is a momentum oscillator that calculates a weighted sum of the rate of change (ROC) of the closing price over four different periods (10, 15, 20, and 30 days) smoothed using simple moving averages (10, 10, 10, and 15 days, respectively). Positive values indicate bullish momentum, while negative values suggest bearish momentum.
+ultimate_oscillator: It is a momentum indicator that calculates a weighted average of three different periods of the buying pressure (BP) to true range (TR) ratio, typically 7, 14, and 28 days. It aims to reduce false signals by incorporating multiple timeframes, with values above 70 indicating overbought conditions and below 30 suggesting oversold conditions.
+aroon: It measures the difference between time since the highest high and lowest low over a 26-day period to determine the strength and direction of a trend.
+stochastic_oscillator: It measures the position of the closing price relative to the 14-day high-low range to assess momentum. It ranges from 0 to 100, with values above 80 indicating overbought conditions and below 20 suggesting oversold conditions, often used to identify potential reversals.
+on_balance_volume: It tracks cumulative volume flow to measure buying and selling pressure. It adds volume on up days and subtracts volume on down days, with increasing OBV confirming an uptrend and decreasing OBV signaling a downtrend.
+ease_of_movement: It measures the relationship between price movement and volume, helping to identify how easily a stock's price moves. A high EMV value indicates that the price is rising with little volume, suggesting strong upward momentum, while a low or negative EMV signals downward pressure.
+chaikin_money_flow: It measures money flow volume over a 20-day period to assess buying and selling pressure. Positive values indicate accumulation (buying pressure), while negative values suggest distribution (selling pressure).
+accumulation_distribution_index: It measures the cumulative money flow volume to determine the strength of buying or selling pressure. It calculates a Closeness Value (CLV) using the high, low, and close prices, then multiplies it by volume to track whether money is flowing into (accumulation) or out of (distribution) an asset.
+volume: The total number of shares traded during the trading day
+All the features are guaranteed to be data frames of same shape. The rows will be indexed by the trading days' dates and columns will be indexed by the stock identifiers from 1 to 2167. You can use these features to construct your portfolio every day.
+
+Daily Returns
+returns: Daily close to close percentage returns, at date t for a stock s. You can use these returns to backtest your strategy. More formally,
+You are given a returns.parquet file containing daily close to close returns of each stock. This also has the same set of 2167 stocks as all the other features but contains data only for the training period which is 2005-2019.
+
+This is only for the purpose of testing your portfolio in the training period. You cannot use returns as a feature in your strategy code.
+
+Understanding the Goal
+The challenge is to allocate unit capital in the long or short direction in the stocks which are in the universe for that day. Know more about Long and Short here. More formally, here's what we want,
+
+For date t and stock s, w(t, s) is the fraction of unit capital allocated to this stock at this date. If this is positive, the stock is long on that day, if this is negative the stock is short on that day.
+Unit Capital Constraint: For each date t,
+Maximum Weight Constraint: To ensure sufficient diversification of the portfolio, For each date t and stock s,
+Dollar Neutral Constraint: To ensure half of your capital is on the long side and half of it is on the short side, For each date t,
+In other words, the sum of weights of all the stocks in the universe in any given day should sum up to ~0. Read about why this is done!
+Universe Constraint: The weight for a stock s which is not in the universe at date t should be 0. More formally,
+Understanding the Metrics
+The following metrics can be computed based on the weight allocations (basically the portfolio positions):
+
+Book Value: It is absolute amount of capital that you have invested in longing or shorting the stocks each day. It is a vector which has one float value every day. It can be calculated as,
+Traded Capital: It is the amount of capital traded each day. It is a vector which has one float value every day. It can be calculated as:
+Turnover: This is the percentage of the total capital that you trade on an average each day. It is a float number. It can be calculated as:
+Gross PnL: This is the Gross Profit and Loss (gross returns) series of your portfolio. It is a vector which has one float value every day. It can be calculated as:
+At this point, you should also realize that for calculating w(t,s) you can use the feature values upto date t-1 only. You cannot look into the future, remember!
+Net PnL: This is the Net Profit and Loss (net returns) series of your portfolio. It is a vector which has one float value every day. It can be calculated as:
+We are assuming that you pay 0.01% of the traded amount everyday as the trading cost to the broker. This is a dummy number which suits our purposes.
+Gross Sharpe Ratio: It is a risk-adjusted returns metric calculated from the Gross PnL series. For this competition, Annualized Gross Sharpe is defined as below:
+Net Sharpe Ratio: It is a risk-adjusted returns metric calculated from the Net PnL series. For this competition, Annualized Net Sharpe is defined as below:
+Evaluation
+The QRT Quant Challenge will begin at 27th March 2026 and will end at 11:55 AM IST 1st April, 2026.
+
+During this period, you will be given access to features from 2005-2025 [both inclusive] and daily stock returns from 2005-2019 [both inclusive]. You can use the features data from 2005-2019 to train, develop and validate your portfolio models. You can get the performance of your portfolio by getting the Net Sharpe Ratio on this period. Higher the Net Sharpe, better is the portfolio.
+
+Hence, you may consider the data from 2005-2019 as the training dataset and data from 2020-2025 as the testing dataset. But we will evaluate the teams based on the Net Sharpe Ratio of the portfolio in the 2020-2025 period.
+
+When you make a submission on Kaggle, you will see a public score which reflects the Net Sharpe Ratio of your portfolio in the 2005-2019 period. There is a hidden private score which reflects the Net Sharpe Ratio on the 2020-2025 period. A good private score backed by reasoning and rationale in description will eventually decide the winner of the competition.
+
+Note that we will run your code to match the submission file you submitted on Kaggle. All Teams for which the code doesn't match the submission file will be instantly eliminated from the competition.
+
+Code and Document Submission
+Your task is to complete the get_weights python function in the file main.ipynb in the Data tab and get the submission.csv file containing your portfolio positions. submission.csv should be of the same shape as universe.parquet. That means it should contain 2167 columns at all times [indicating 2167 stocks]. It should contain all and only those rows [indicating 5058 dates] which are present in universe.parquet.
+
+Along with this, you are required to submit your reasoning and process used to arrive at this strategy in strategy_description.txt file.
+
+Your last submission will be considered final. You must submit your portfolio positions on Kaggle as a submission.csv file before 11:55 AM IST 1st April, 2026 in order to be a part of the competition.
+
+Note the following before proceeding to write this function:
+
+The get_weights function is designed to calculate stock positions or portfolio weights for the current trading day based on the provided feature data and stock universe constraints.
+The function accepts two arguments: features, a pandas.DataFrame where level 0 columns are pandas.DataFrame objects containing historical feature data, and today_universe, a pandas.Series object that identifies the stocks eligible for trading on the current day.
+In features, all columnar Dataframes of level 0 share the same shape, chronological datetime index, and identical column ordering corresponding to stock identifiers.
+The function is invoked daily, leveraging the feature data clipped up to (but not including) the current trading day to ensure no forward-looking bias.
+The today_universe Series has stock identifiers as its index and binary values (1 for inclusion in the tradable universe, 0 otherwise) to constrain the eligible stocks.
+The function outputs a dictionary where the keys are strings representing stock identifiers, and the values are floats representing the computed weights/positions for the current trading day.
+The dictionary should contain only those stock identifiers as the keys for which the today_universe is 1. We will not evaluate the results if any other stock identifier is in the returned dictionary.
+import pandas as pd
+
+def get_weights(features: pd.DataFrame, today_universe: pd.Series) -> dict[str, float]:
+    """
+    Calculate stock weights for the portfolio on the current trading day.
+
+    Parameters:
+    -----------
+    features_dict : pd.DataFrame
+        A pd.DataFrame object where the columns are feature DataFrames containing the feature data. 
+        Each such feature dataframe has the following index and columns:
+        - Index: datetime (chronological order).
+        - Columns: stock identifiers (consistent across all DataFrames).
+
+    today_universe : pd.Series
+        A pandas Series indicating the stock universe for the current day.
+        - Index: stock identifiers.
+        - Values: 0 or 1, where 1 means the stock is in the universe and 
+          0 means it is not in the universe.
+
+    Returns:
+    --------
+    dict[str, float]
+        A dictionary where:
+        - Keys: Stock identifiers (strings).
+        - Values: Weights/positions of the stocks (floats) for the current trading day.
+    """
+    pass
+Sample strategy_description.txt
+
+Strategy Description – [Team Name]
+
+Core Idea  
+A simple **[momentum / mean-reversion / multi-factor]** strategy that identifies stocks likely to outperform based on recent patterns and basic indicators.
+
+Signals  
+- Main signals: [e.g., momentum, RSI, moving averages] 
+- Processing: Data is standardised (e.g., z-scores) and smoothed using rolling averages.
+
+Portfolio  
+1. Rank stocks based on signal strength  
+2. Select top/bottom [X%]  
+3. Allocate weights based on volatility (or equal weight)  
+
+Risk Controls  
+- Limit number of positions  
+- Avoid over-concentration in few stocks  
+- Reduce exposure in high volatility periods  
+Run pip install -r requirements.txt before proceeding to run the code we gave you. It will install all the python dependencies in your local PC environment. You can also use Kaggle Notebooks for cloud based python environment.
+
+Submit your code repository
+Before the end of the competition, each team needs to submit the code in the following Dropbox link
+
+Note: You can only submit the form once for the final submission.
+
+Make sure that you submit only a {team_name}.zip file containing all the code files required to generate your submission.csv and strategy description file.
+
+There should be at least three files inside your zip:
+
+main.ipynb which contains your get_weights function
+requirements.txt which contains all the package requirements needed to run your main.py
+strategy_description.txt which contains details of the strategy.
+[Optional] utility files specific to your code.
+For example if your team name is alphawarriors, then you must submit a alphawarriors.zip file in the dropbox link which on unzipping should produce the following directory:
+
+alphawarriors/
+│-- main.ipynb
+│-- strategy_description.txt
+│-- requirements.txt
+│-- (other optional files)
+Sample requirements.txt
+
+pandas
+pyarrow==17.0.1
+plotly
+numpy

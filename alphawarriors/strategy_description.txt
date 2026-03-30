@@ -1,0 +1,25 @@
+Strategy Description – AlphaWarriors
+
+Core Idea
+A robust, high-performance absolute-return systematic strategy combining cross-sectional single-factor mean reversion and price-volume trend-following. By completely removing reliance on black-box non-linear Machine Learning modules, the strategy is mathematically grounded, exceptionally fast to evaluate, devoid of chronic over-fitting, and boasts significant out-of-sample resilience.
+
+Signals
+Our research identified that 1-day lagged signals often predict strong short-term price movements across the daily tradable universe.
+We use two classes of signals:
+- Mean Reversion: 6 specific technical/oscillator factors (e.g. accumulation_distribution_index, ichimoku, trend_5_20, trend_1_3, chaikin_money_flow, average_true_range) heavily correlated with near-term reversals. These are ranked cross-sectionally descending.
+- Volume & Trend: 3 positive predictive volume/flow factors (volume, on_balance_volume, ease_of_movement) showing strong cross-sectional persistence. These are ranked cross-sectionally ascending.
+
+All daily signals are explicitly cross-sectionally ranked using `method='first'` and demeaned to represent continuous, symmetrical score equivalents devoid of any unbounded feature outliers.
+
+Portfolio Formation
+1. Negative IC factors (Mean Reversion) are aggregated equal-weight.
+2. Positive IC factors (Volume) are aggressively overlaid with a specific optimized weighting structure (0.7).
+3. The raw aggregate score enforces universe masking constraints daily.
+4. Apply an Exponential Weighted Moving Average (EWMA) with a span of 5 days across the signal. This crucially controls our portfolio turnover limit—drastically cutting operational trading costs while smoothly bridging any single-day noisy reversals.
+5. Re-demean the signals explicitly over solely the tradable space.
+6. The resulting vector is accurately normalized absolutely such that the daily final gross constraint is tightly held to exactly 1.0 (with 0.5 Long and 0.5 Short respectively).
+
+Risk Controls
+- Eliminating all complex multi-feature tree combinations isolates factor returns solely to the proven core anomalies. 
+- Using percentage ranks effectively neutralizes long-tailed technical indicator values daily.
+- Setting an EWMA limits turnover to safe and highly cost-efficient turnover bounds out-of-sample. Maximum single-asset stock weight bounds trivially hold implicitly due to wide diverse alpha portfolios lacking non-linear scaling explosions.
